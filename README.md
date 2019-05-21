@@ -45,6 +45,7 @@ Then manually install the following JARs:
     ```
 
 - prod
+
     [StringConfig.java](src/main/java/common/StringConfig.java)
 
     ```java
