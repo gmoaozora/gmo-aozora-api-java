@@ -24,7 +24,7 @@ import java.util.Objects;
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaClientCodegen", date = "2018-12-18T06:43:57.831Z")
 public class VaStatusChangeResponse {
-  @SerializedName("vaccounts")
+  @SerializedName("vAccounts")
   private List<VAccount> vaccounts = null;
 
   public VaStatusChangeResponse vaccounts(List<VAccount> vaccounts) {
