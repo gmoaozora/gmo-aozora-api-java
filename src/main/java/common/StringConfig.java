@@ -19,6 +19,6 @@ public class StringConfig {
     public static final String AUTH_PATH = "/auth/v1";
     public static final String PERSONAL_PATH = "/personal/v1";
     public static final String CORPORATE_PATH = "/corporation/v1";
-    public static final String WEBHOOK_PATH = "webhooks/v1";
+    public static final String WEBHOOK_PATH = "/webhooks/v1";
 
 }
