@@ -92,7 +92,7 @@ public class Configuration {
      * @return Default API common.client
      */
     public static ApiClient getWebhookApiClient() {
-        return authApiClient;
+        return webhookApiClient;
     }
 
     /**
@@ -102,6 +102,6 @@ public class Configuration {
      * @param apiClient API common.client
      */
     public static void setWebhookApiClient(ApiClient apiClient) {
-        authApiClient = apiClient;
+        webhookApiClient = apiClient;
     }
 }

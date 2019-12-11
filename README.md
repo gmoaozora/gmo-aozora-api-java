@@ -20,16 +20,17 @@ Java 1.7+
 
 ## Installation
 
-At first generate the JAR by executing:
+- At first, [install Gradle](https://gradle.org/install/) on your local
+
+- Generate the JAR by executing the following command
 
 ```shell
-mvn clean package
+gradle build
 ```
 
-Then manually install the following JARs:
+- Specify classpath in the following JARs when compiling your project
 
-* `target/gmo-aozora-api-java-1.0-SNAPSHOT.jar`
-* `target/lib/*.jar`
+`build/libs/gmo-aozora-api-java-1.0-SNAPSHOT.jar`
 
 ## Getting Started
 
