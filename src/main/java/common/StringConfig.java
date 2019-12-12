@@ -5,13 +5,13 @@ public class StringConfig {
     public final static String colon = ":";
     public final static String GRANT_TYPE_REFRESH_TOKEN = "refresh_token";
     public final static String GRANT_TYPE_GET_TOKEN = "authorization_code";
-    public final static String ISSUER = StringConfig.PROD_ISSUER;
+    public final static String ISSUER = StringConfig.STG_ISSUER;
     public final static String STG_ISSUER = "https://stg-api.gmo-aozora.com";
     public final static String PROD_ISSUER = "https://api.gmo-aozora.com";
     public final static String AZP = "azp";
     public static final String NONCE = "nonce";
 
-    public static final String BASE_ENDPOINT = StringConfig.PROD_BASE_ENDPOINT;
+    public static final String BASE_ENDPOINT = StringConfig.STG_BASE_ENDPOINT;
 
     private static final String STG_BASE_ENDPOINT = "https://stg-api.gmo-aozora.com/ganb/api";
     private static final String PROD_BASE_ENDPOINT = "https://api.gmo-aozora.com/ganb/api";
