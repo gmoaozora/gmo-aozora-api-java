@@ -20,6 +20,7 @@ import personal.model.AccountsResponse;
 import personal.model.BalancesResponse;
 import personal.model.DepositTransactionsResponse;
 import personal.model.TransactionsResponse;
+import personal.model.VisaTransactionsResponse;
 
 /**
  * API tests for AccountApi
@@ -102,5 +103,25 @@ public class AccountApiTest {
 
         // TODO: test validations
     }
-    
+
+    /**
+     * Visaデビット取引明細照会
+     *
+     * 指定した円普通預金口座のVisaデビット取引明細情報を照会します ■対象科目 円普通預金口座かつ、Visaデビットカードを現時点で保有している口座 ■取得上限件数 500件 取得できる明細数が500に満たないときは取得できる明細のみを返却します 取得できる明細が存在しない場合は「200：OK」とし明細を返却しません ただし、1回の検索で総件数が99,999件を超える照会はできません。それ以上の場合は「400 Bad Request」を返却します ■ページング 2ページ目以降を照会する際は、初回と同じリクエスト内容に、初回レスポンスの次明細キーを追加してリクエストしてください ■ソート順 ・取引の昇順
+     *
+     * @throws ApiException
+     *          if the Api call fails
+     */
+    @Test
+    public void visaTransactionsUsingGETTest() throws ApiException {
+        String accountId = null;
+        String xAccessToken = null;
+        String dateFrom = null;
+        String dateTo = null;
+        String nextItemKey = null;
+        VisaTransactionsResponse response = api.visaTransactionsUsingGET(accountId, xAccessToken, dateFrom, dateTo, nextItemKey);
+
+        // TODO: test validations
+    }
+
 }

@@ -27,6 +27,7 @@ import corporate.model.AccountsResponse;
 import corporate.model.BalancesResponse;
 import corporate.model.DepositTransactionsResponse;
 import corporate.model.TransactionsResponse;
+import corporate.model.VisaTransactionsResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
@@ -662,6 +663,168 @@ public class AccountApi {
 
         com.squareup.okhttp.Call call = transactionsUsingGETValidateBeforeCall(accountId, xAccessToken, dateFrom, dateTo, nextItemKey, progressListener, progressRequestListener);
         Type localVarReturnType = new TypeToken<TransactionsResponse>(){}.getType();
+        apiClient.executeAsync(call, localVarReturnType, callback);
+        return call;
+    }
+    /**
+     * Build call for visaTransactionsUsingGET
+     * @param accountId 口座ID 半角英数字 口座を識別するID 科目コードが以下の場合のみ受け付けます ・01&#x3D;普通預金（有利息） ・02&#x3D;普通預金（決済用）  minLength: 12 maxLength: 29  (required)
+     * @param xAccessToken アクセストークン  minLength: 1 maxLength: 128             (required)
+     * @param dateFrom 対象期間From 半角文字 YYYY-MM-DD形式  minLength: 10 maxLength: 10  (optional)
+     * @param dateTo 対象期間To 半角文字 YYYY-MM-DD形式 対象期間Fromと対象期間Toを指定する場合は、対象期間From≦対象期間Toとし、それ以外は「400 Bad Request」を返却   minLength: 10 maxLength: 10  (optional)
+     * @param nextItemKey 次明細キー 半角数字 初回要求時は未設定 初回応答で次明細キーが「true」の場合、返却された同項目を2回目以降に設定  minLength: 1 maxLength: 24  (optional)
+     * @param progressListener Progress listener
+     * @param progressRequestListener Progress request listener
+     * @return Call to execute
+     * @throws ApiException If fail to serialize the request body object
+     */
+    public com.squareup.okhttp.Call visaTransactionsUsingGETCall(String accountId, String xAccessToken, String dateFrom, String dateTo, String nextItemKey, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        Object localVarPostBody = null;
+
+        // create path and map variables
+        String localVarPath = "/accounts/visa-transactions";
+
+        List<Pair> localVarQueryParams = new ArrayList<Pair>();
+        List<Pair> localVarCollectionQueryParams = new ArrayList<Pair>();
+        if (accountId != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("accountId", accountId));
+        if (dateFrom != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("dateFrom", dateFrom));
+        if (dateTo != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("dateTo", dateTo));
+        if (nextItemKey != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("nextItemKey", nextItemKey));
+
+        Map<String, String> localVarHeaderParams = new HashMap<String, String>();
+        if (xAccessToken != null)
+        localVarHeaderParams.put("x-access-token", apiClient.parameterToString(xAccessToken));
+
+        Map<String, Object> localVarFormParams = new HashMap<String, Object>();
+
+        final String[] localVarAccepts = {
+            "application/json;charset=UTF-8"
+        };
+        final String localVarAccept = apiClient.selectHeaderAccept(localVarAccepts);
+        if (localVarAccept != null) localVarHeaderParams.put("Accept", localVarAccept);
+
+        final String[] localVarContentTypes = {
+            "application/json;charset=UTF-8"
+        };
+        final String localVarContentType = apiClient.selectHeaderContentType(localVarContentTypes);
+        localVarHeaderParams.put("Content-Type", localVarContentType);
+
+        if(progressListener != null) {
+            apiClient.getHttpClient().networkInterceptors().add(new com.squareup.okhttp.Interceptor() {
+                @Override
+                public com.squareup.okhttp.Response intercept(Chain chain) throws IOException {
+                    com.squareup.okhttp.Response originalResponse = chain.proceed(chain.request());
+                    return originalResponse.newBuilder()
+                    .body(new ProgressResponseBody(originalResponse.body(), progressListener))
+                    .build();
+                }
+            });
+        }
+
+        String[] localVarAuthNames = new String[] {  };
+        return apiClient.buildCall(localVarPath, "GET", localVarQueryParams, localVarCollectionQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarAuthNames, progressRequestListener);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private com.squareup.okhttp.Call visaTransactionsUsingGETValidateBeforeCall(String accountId, String xAccessToken, String dateFrom, String dateTo, String nextItemKey, final ProgressResponseBody.ProgressListener progressListener, final ProgressRequestBody.ProgressRequestListener progressRequestListener) throws ApiException {
+        try {
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            ExecutableValidator executableValidator = factory.getValidator().forExecutables();
+
+            Object[] parameterValues = { accountId, xAccessToken, dateFrom, dateTo, nextItemKey };
+            Method method = this.getClass().getMethod("visaTransactionsUsingGETWithHttpInfo", String.class, String.class, String.class, String.class, String.class);
+            Set<ConstraintViolation<AccountApi>> violations = executableValidator.validateParameters(this, method,
+                    parameterValues);
+
+            if (violations.size() == 0) {
+                com.squareup.okhttp.Call call = visaTransactionsUsingGETCall(accountId, xAccessToken, dateFrom, dateTo, nextItemKey, progressListener, progressRequestListener);
+                return call;
+
+            } else {
+                throw new BeanValidationException((Set) violations);
+            }
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new ApiException(e.getMessage());
+        } catch (SecurityException e) {
+            e.printStackTrace();
+            throw new ApiException(e.getMessage());
+        }
+
+    }
+
+    /**
+     * Visaデビット取引明細照会
+     * 指定した円普通預金口座のVisaデビット取引明細情報を照会します ■対象科目 円普通預金口座かつ、Visaデビットカードを現時点で保有している口座 ■取得上限件数 500件 取得できる明細数が500に満たないときは取得できる明細のみを返却します 取得できる明細が存在しない場合は「200：OK」とし明細を返却しません ただし、1回の検索で総件数が99,999件を超える照会はできません。それ以上の場合は「400 Bad Request」を返却します ■ページング 2ページ目以降を照会する際は、初回と同じリクエスト内容に、初回レスポンスの次明細キーを追加してリクエストしてください ■ソート順 ・取引の昇順
+     * @param accountId 口座ID 半角英数字 口座を識別するID 科目コードが以下の場合のみ受け付けます ・01&#x3D;普通預金（有利息） ・02&#x3D;普通預金（決済用）  minLength: 12 maxLength: 29  (required)
+     * @param xAccessToken アクセストークン  minLength: 1 maxLength: 128             (required)
+     * @param dateFrom 対象期間From 半角文字 YYYY-MM-DD形式  minLength: 10 maxLength: 10  (optional)
+     * @param dateTo 対象期間To 半角文字 YYYY-MM-DD形式 対象期間Fromと対象期間Toを指定する場合は、対象期間From≦対象期間Toとし、それ以外は「400 Bad Request」を返却   minLength: 10 maxLength: 10  (optional)
+     * @param nextItemKey 次明細キー 半角数字 初回要求時は未設定 初回応答で次明細キーが「true」の場合、返却された同項目を2回目以降に設定  minLength: 1 maxLength: 24  (optional)
+     * @return VisaTransactionsResponse
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public VisaTransactionsResponse visaTransactionsUsingGET(String accountId, String xAccessToken, String dateFrom, String dateTo, String nextItemKey) throws ApiException {
+        ApiResponse<VisaTransactionsResponse> resp = visaTransactionsUsingGETWithHttpInfo(accountId, xAccessToken, dateFrom, dateTo, nextItemKey);
+        return resp.getData();
+    }
+
+    /**
+     * Visaデビット取引明細照会
+     * 指定した円普通預金口座のVisaデビット取引明細情報を照会します ■対象科目 円普通預金口座かつ、Visaデビットカードを現時点で保有している口座 ■取得上限件数 500件 取得できる明細数が500に満たないときは取得できる明細のみを返却します 取得できる明細が存在しない場合は「200：OK」とし明細を返却しません ただし、1回の検索で総件数が99,999件を超える照会はできません。それ以上の場合は「400 Bad Request」を返却します ■ページング 2ページ目以降を照会する際は、初回と同じリクエスト内容に、初回レスポンスの次明細キーを追加してリクエストしてください ■ソート順 ・取引の昇順
+     * @param accountId 口座ID 半角英数字 口座を識別するID 科目コードが以下の場合のみ受け付けます ・01&#x3D;普通預金（有利息） ・02&#x3D;普通預金（決済用）  minLength: 12 maxLength: 29  (required)
+     * @param xAccessToken アクセストークン  minLength: 1 maxLength: 128             (required)
+     * @param dateFrom 対象期間From 半角文字 YYYY-MM-DD形式  minLength: 10 maxLength: 10  (optional)
+     * @param dateTo 対象期間To 半角文字 YYYY-MM-DD形式 対象期間Fromと対象期間Toを指定する場合は、対象期間From≦対象期間Toとし、それ以外は「400 Bad Request」を返却   minLength: 10 maxLength: 10  (optional)
+     * @param nextItemKey 次明細キー 半角数字 初回要求時は未設定 初回応答で次明細キーが「true」の場合、返却された同項目を2回目以降に設定  minLength: 1 maxLength: 24  (optional)
+     * @return ApiResponse&lt;VisaTransactionsResponse&gt;
+     * @throws ApiException If fail to call the API, e.g. server error or cannot deserialize the response body
+     */
+    public ApiResponse<VisaTransactionsResponse> visaTransactionsUsingGETWithHttpInfo(String accountId, String xAccessToken, String dateFrom, String dateTo, String nextItemKey) throws ApiException {
+        com.squareup.okhttp.Call call = visaTransactionsUsingGETValidateBeforeCall(accountId, xAccessToken, dateFrom, dateTo, nextItemKey, null, null);
+        Type localVarReturnType = new TypeToken<VisaTransactionsResponse>(){}.getType();
+        return apiClient.execute(call, localVarReturnType);
+    }
+
+    /**
+     * Visaデビット取引明細照会 (asynchronously)
+     * 指定した円普通預金口座のVisaデビット取引明細情報を照会します ■対象科目 円普通預金口座かつ、Visaデビットカードを現時点で保有している口座 ■取得上限件数 500件 取得できる明細数が500に満たないときは取得できる明細のみを返却します 取得できる明細が存在しない場合は「200：OK」とし明細を返却しません ただし、1回の検索で総件数が99,999件を超える照会はできません。それ以上の場合は「400 Bad Request」を返却します ■ページング 2ページ目以降を照会する際は、初回と同じリクエスト内容に、初回レスポンスの次明細キーを追加してリクエストしてください ■ソート順 ・取引の昇順
+     * @param accountId  半角英数字 口座を識別するID 科目コードが以下の場合のみ受け付けます ・01&#x3D;普通預金（有利息） ・02&#x3D;普通預金（決済用）  minLength: 12 maxLength: 29  (required)
+     * @param xAccessToken アクセストークン  minLength: 1 maxLength: 128             (required)
+     * @param dateFrom 対象期間From 半角文字 YYYY-MM-DD形式  minLength: 10 maxLength: 10  (optional)
+     * @param dateTo 対象期間To 半角文字 YYYY-MM-DD形式 対象期間Fromと対象期間Toを指定する場合は、対象期間From≦対象期間Toとし、それ以外は「400 Bad Request」を返却   minLength: 10 maxLength: 10  (optional)
+     * @param nextItemKey 次明細キー 半角数字 初回要求時は未設定 初回応答で次明細キーが「true」の場合、返却された同項目を2回目以降に設定  minLength: 1 maxLength: 24  (optional)
+     * @param callback The callback to be executed when the API call finishes
+     * @return The request call
+     * @throws ApiException If fail to process the API call, e.g. serializing the request body object
+     */
+    public com.squareup.okhttp.Call visaTransactionsUsingGETAsync(String accountId, String xAccessToken, String dateFrom, String dateTo, String nextItemKey, final ApiCallback<VisaTransactionsResponse> callback) throws ApiException {
+
+        ProgressResponseBody.ProgressListener progressListener = null;
+        ProgressRequestBody.ProgressRequestListener progressRequestListener = null;
+
+        if (callback != null) {
+            progressListener = new ProgressResponseBody.ProgressListener() {
+                @Override
+                public void update(long bytesRead, long contentLength, boolean done) {
+                    callback.onDownloadProgress(bytesRead, contentLength, done);
+                }
+            };
+
+            progressRequestListener = new ProgressRequestBody.ProgressRequestListener() {
+                @Override
+                public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
+                    callback.onUploadProgress(bytesWritten, contentLength, done);
+                }
+            };
+        }
+
+        com.squareup.okhttp.Call call = visaTransactionsUsingGETValidateBeforeCall(accountId, xAccessToken, dateFrom, dateTo, nextItemKey, progressListener, progressRequestListener);
+        Type localVarReturnType = new TypeToken<VisaTransactionsResponse>(){}.getType();
         apiClient.executeAsync(call, localVarReturnType, callback);
         return call;
     }

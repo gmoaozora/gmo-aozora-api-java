@@ -8,6 +8,7 @@ Method | HTTP request | Description
 [**accountsUsingGET**](AccountApi.md#accountsUsingGET) | **GET** /accounts | 口座一覧照会
 [**balancesUsingGET**](AccountApi.md#balancesUsingGET) | **GET** /accounts/balances | 残高照会
 [**transactionsUsingGET**](AccountApi.md#transactionsUsingGET) | **GET** /accounts/transactions | 入出金明細照会
+[**visaTransactionsUsingGET**](AccountApi.md#visaTransactionsUsingGET) | **GET** /accounts/visa-transactions | Visaデビット取引明細照会
 
 
 # **accountsDepositTransactionsUsingGET**
@@ -272,5 +273,71 @@ No authorization required
 
 ### HTTP request headers
 
+ - **Content-Type**: application/json;charset=UTF-8
+ - **Accept**: application/json;charset=UTF-8
+
+# **visaTransactionsUsingGet**
+> VisaTransactionsResponse visaTransactionsUsingGET(accountId, xAccessToken, dateFrom, dateTo, nextItemKey)
+
+### Visaデビット取引明細照会
+指定した円普通預金口座のVisaデビット取引明細情報を照会します
+### 詳細説明
+#### 対象科目
+* 円普通預金口座かつ、Visaデビットカードを現時点で保有している口座
+#### 取得上限件数
+* 500件
+* 取得できる明細数が500に満たないときは取得できる明細のみを返却します
+* 取得できる明細が存在しない場合は「200：OK」とし明細を返却しません
+* ただし、1回の検索で総件数が99,999件を超える照会はできません。それ以上の場合は「400 Bad Request」を返却します
+#### ページング
+* 2ページ目以降を照会する際は、初回と同じリクエスト内容に、初回レスポンスの次明細キーを追加してリクエストしてください
+#### ソート順
+* 取引の降順
+#### 対象期間
+日本語名     | &#9312; | &#9313; | &#9314; | &#9315;
+:----|:----:|:----:|:----:|:----:
+対象期間From | × | ○ | × | ○
+対象期間To   | × | × | ○ | ○
+* &#9312;の場合: 当日分のVisaデビット取引明細を返却
+* &#9313;の場合: 対象期間From ～ 当日までのVisaデビット取引明細を返却
+* &#9314;の場合: 取引初回 ～ 対象期間ToまでのVisaデビット取引明細を返却
+* &#9315;の場合: 対象期間From ～ 対象期間ToまでのVisaデビット取引明細を返却
+### Example
+```java
+import personal.AccountApi;
+import personal.model.VisaTransactionsResponse;
+import common.ApiException;
+
+public class SamplePersonalVisaTransactionsUsingGet {
+    public static void main(String[] args){
+        AccountApi apiInstance = new AccountApi();
+        String accountId = "accountId_example"; // String | 口座ID 半角英数字 口座を識別するID  科目コードが以下の場合のみ受け付けます ・01=普通預金（有利息） ・02=普通預金（決済用）  minLength: 12 maxLength: 29 
+        String xAccessToken = "xAccessToken_example"; // String | アクセストークン  minLength: 1 maxLength: 128            
+        String dateFrom = "dateFrom_example"; // String | 対象期間From 半角文字 YYYY-MM-DD形式  minLength: 10 maxLength: 10 
+        String dateTo = "dateTo_example"; // String | 対象期間To 半角文字 YYYY-MM-DD形式 対象期間Fromと対象期間Toを指定する場合は、対象期間From≦対象期間Toとし、それ以外は「400 Bad Request」を返却   minLength: 10 maxLength: 10 
+        String nextItemKey = "nextItemKey_example"; // String | 次明細キー 半角数字 初回要求時は未設定 初回応答で次明細キーが「true」の場合、返却された同項目を2回目以降に設定  minLength: 1 maxLength: 24 
+        try {
+            VisaTransactionsResponse result = apiInstance.visaTransactionsUsingGET(accountId, xAccessToken, dateFrom, dateTo, nextItemKey);
+            System.out.println(result);
+        } catch (ApiException e) {
+            System.err.println("Exception when calling AccountApi#visaTransactionsUsingGET");
+            e.printStackTrace();
+        }
+    }
+}
+```
+### Parameters
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **account_id** | **String**| 口座ID 半角英数字 口座を識別するID 科目コードが以下の場合のみ受け付けます ・01&#x3D;普通預金（有利息） ・02&#x3D;普通預金（決済用）  minLength: 12 maxLength: 29  | |
+ **x_access_token** | **String**| アクセストークン  minLength: 1 maxLength: 128             | |
+ **date_from** | **String**| 対象期間From 半角文字 YYYY-MM-DD形式  minLength: 10 maxLength: 10  | [optional]
+ **date_to** | **String**| 対象期間To 半角文字 YYYY-MM-DD形式 対象期間Fromと対象期間Toを指定する場合は、対象期間From≦対象期間Toとし、それ以外は「400 Bad Request」を返却  minLength: 10 maxLength: 10  |  [optional]
+ **next_item_key** | **String**| 次明細キー 半角数字 初回要求時は未設定 初回応答で次明細キーが「true」の場合、返却された同項目を2回目以降に設定  minLength: 1 maxLength: 24  | [optional]
+### Return type
+[**VisaTransactionsResponse**](VisaTransactionsResponse.md)
+### application.AuthController
+No authorization required
+### HTTP request headers
  - **Content-Type**: application/json;charset=UTF-8
  - **Accept**: application/json;charset=UTF-8
