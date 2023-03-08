@@ -529,6 +529,8 @@ public class TransferApi {
         localVarQueryParams.addAll(apiClient.parameterToPair("requestTransferClass", requestTransferClass));
         if (requestTransferTerm != null)
         localVarQueryParams.addAll(apiClient.parameterToPair("requestTransferTerm", requestTransferTerm));
+        if (requestTransferStatuses != null && requestTransferStatuses.getRequestTransferStatus() != null)
+        localVarQueryParams.addAll(apiClient.parameterToPair("requestTransferStatus", requestTransferStatuses.getRequestTransferStatus()));
 
         Map<String, String> localVarHeaderParams = new HashMap<String, String>();
         if (xAccessToken != null)
